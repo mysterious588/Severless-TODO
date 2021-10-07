@@ -47,7 +47,8 @@ export async function getTodosForUser(userId) {
     return await todosAcess.getTodos(userId)
 }
 
-export async function createAttachmentPresignedUrl(todoId: string) {
-    logger.info('creating image url for todo: ', todoId)
-    attachmentUtils.createAttachmentPresignedUrl(todoId)
+export async function createAttachmentPresignedUrl(todoId: string, userId) {
+    logger.info('creating image url for todo: ', {todoId})
+    const attachement_url = attachmentUtils.createAttachmentPresignedUrl(todoId)
+    return await todosAcess.updateAttachmentUrl(attachement_url.split("?")[0], todoId, userId)
 }
