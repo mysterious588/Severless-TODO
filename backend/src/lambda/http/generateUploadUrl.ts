@@ -6,10 +6,13 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } f
 
 import { createAttachmentPresignedUrl } from '../../businessLogic/todos'
 
+import { getUserId } from '../utils';
+
 const logger = createLogger('generate upload url')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
+  const userId = getUserId
   if (!todoId) {
     logger.error('missing todoId')
     return {
@@ -20,7 +23,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     }
   }
 
-  const attachementUrl = createAttachmentPresignedUrl(todoId)
+  const attachementUrl = createAttachmentPresignedUrl(todoId, userId)
 
   logger.info('created url: ', {attachementUrl})
 

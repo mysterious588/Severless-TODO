@@ -55,21 +55,45 @@ export class TodosAccess {
     }
 
     async updateTodo(todoId: string, userId: string, todoUpdate: TodoUpdate) {
-            await this.docClient.update({
-                TableName: this.todosTable,
-                Key: {
-                    userId: userId,
-                    todoId: todoId
-                },
-                UpdateExpression: "set #name = :n, dueDate=:d, done=:a",
-                ExpressionAttributeValues: {
-                    ":n": todoUpdate.name,
-                    ":d": todoUpdate.dueDate,
-                    ":a": todoUpdate.done
-                },
-                ReturnValues: "UPDATED_NEW"
-            }).promise()
-        logger.info("updated note with id: ", {todoId})
+        await this.docClient.update({
+            TableName: this.todosTable,
+            Key: {
+                userId: userId,
+                todoId: todoId
+            },
+            UpdateExpression: "set #name = :name, #dueDate=:dueDate, #done=:done",
+            ExpressionAttributeValues: {
+                ":name": todoUpdate.name,
+                ":dueDate": todoUpdate.dueDate,
+                ":done": todoUpdate.done
+            },
+            ExpressionAttributeNames: {
+                '#name': 'name',
+                '#dueDate': 'dueDate',
+                '#done': 'done'
+            },
+            ReturnValues: "UPDATED_NEW"
+        }).promise()
+        logger.info("updated note with id: ", { todoId })
         return todoUpdate
+    }
+
+    async updateAttachmentUrl(attachmentUrl: string, todoId: string, userId: string) {
+        logger.info('Adding attachement url')
+        await this.docClient.update({
+            TableName: this.todosTable,
+            Key: { todoId, userId },
+            UpdateExpression:
+                'set #attachmentUrl = :attachmentUrl',
+            ExpressionAttributeValues: {
+                ':attachmentUrl': attachmentUrl
+            },
+            ExpressionAttributeNames: {
+                '#attachmentUrl': 'attachmentUrl'
+            },
+            ReturnValues: "UPDATED_NEW"
+        }).promise()
+        logger.info("Added attachment Url for: ", { todoId })
+        return attachmentUrl
     }
 }

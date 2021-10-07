@@ -12,15 +12,15 @@ export class AttachmentUtils {
     private readonly s3Client = new XAWS.S3({
       signatureVersion: 'v4'
     }),
-    private readonly images_bucket = process.env.TODOS_IMAGES_BUCKET,
+    private readonly images_bucket = process.env.ATTACHMENT_S3_BUCKET,
     private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION
   ) { }
 
-  async createAttachmentPresignedUrl(todoId: string): Promise<string> {
+  createAttachmentPresignedUrl(todoId: string): string {
     const signedUrl = this.s3Client.getSignedUrl('putObject', {
       Bucket: this.images_bucket,
       Key: todoId,
-      Expires: this.urlExpiration
+      Expires: parseInt(this.urlExpiration)
     })
     logger.info("Signed url: ", { signedUrl, todoId })
     return signedUrl
