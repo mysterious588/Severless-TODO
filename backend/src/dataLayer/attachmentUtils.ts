@@ -23,6 +23,6 @@ export class AttachmentUtils {
       Expires: parseInt(this.urlExpiration)
     })
     logger.info("Signed url: ", { signedUrl, todoId })
-    return signedUrl
+    return signedUrl.split("?")[0]
   }
 }
