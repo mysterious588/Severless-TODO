@@ -85,11 +85,13 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+          request:
+            schema:
+              "application/json": ${file(src/schemas/createtodomodel.json)}     
           documentation:
             summary: "Create a Todo"
             description: "Create a new Todo item"
-            requestModels:
-              "application/json": createtodomodel     
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -106,14 +108,15 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
+          request:
+            schema:
+              "application/json": ${file(src/schemas/createtodomodel.json)} 
           documentation:
             summary: "update a Todo"
             description: "update an existing Todo item"
             tags:
               - Todo
-              - Create
-            requestModels:
-              "application/json": updatetodomodel     
+              - Update
     iamRoleStatements:
       - Effect: Allow
         Action:  
