@@ -91,7 +91,7 @@ export class TodosAccess {
             ExpressionAttributeNames: {
                 '#attachmentUrl': 'attachmentUrl'
             },
-            ReturnValues: "UPDATED_NEW"
+            ReturnValues: "ALL_NEW"
         }).promise()
         logger.info("Added attachment Url for: ", { todoId })
         return attachmentUrl
